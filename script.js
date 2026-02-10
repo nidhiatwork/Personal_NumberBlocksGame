@@ -44,7 +44,6 @@ const blocksContainer = document.getElementById('blocks-container');
 const showAnswerBtn = document.getElementById('show-answer-btn');
 const nextBtn = document.getElementById('next-btn');
 const startQuizBtn = document.getElementById('start-quiz-btn');
-const toggleVisualBtn = document.getElementById('toggle-visual');
 const celebrationEl = document.getElementById('celebration');
 const quizContainer = document.getElementById('quiz-container');
 const resultsContainer = document.getElementById('results-container');
@@ -60,7 +59,6 @@ function attachEventListeners() {
     showAnswerBtn.addEventListener('click', showAnswer);
     nextBtn.addEventListener('click', nextQuestion);
     startQuizBtn.addEventListener('click', startQuiz);
-    toggleVisualBtn.addEventListener('click', toggleVisual);
 }
 
 // Show start screen
@@ -208,23 +206,11 @@ function showAnswer() {
     playSound('reveal');
 }
 
-// Toggle visual blocks
-function toggleVisual() {
-    if (showingVisual) {
-        blocksContainer.innerHTML = '';
-        showingVisual = false;
-        toggleVisualBtn.textContent = '✨ See the Magic!';
-    } else {
-        showVisual();
-    }
-}
-
 // Show visual blocks
 function showVisual() {
     if (showingVisual) return;
     showingVisual = true;
     blocksContainer.innerHTML = '';
-    toggleVisualBtn.textContent = '🎨 Hide Magic';
 
     const num1 = currentProblem.num1;
     const num2 = currentProblem.num2;

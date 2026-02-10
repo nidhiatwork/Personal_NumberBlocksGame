@@ -22,16 +22,6 @@
 
             <!-- Quiz Container -->
             <div id="quiz-container" style="display: none;">
-                <!-- Navigation Buttons -->
-                <div class="nav-buttons">
-                    <button class="nav-btn home-btn" onclick="location.reload()">
-                        🏠 Home
-                    </button>
-                    <button class="nav-btn restart-btn" onclick="if(confirm('Restart quiz?')) location.reload()">
-                        🔄 Restart
-                    </button>
-                </div>
-
                 <!-- Score and Question Display -->
                 <div class="stats-bar">
                     <div class="stat">
@@ -76,10 +66,15 @@
                     </button>
                 </div>
 
-                <!-- Visual Explanation Toggle -->
-                <button id="toggle-visual" class="toggle-visual-btn">
-                    ✨ See the Magic!
-                </button>
+                <!-- Navigation Buttons -->
+                <div class="nav-buttons">
+                    <button class="nav-btn home-btn" onclick="location.reload()">
+                        🏠 Home
+                    </button>
+                    <button class="nav-btn restart-btn" onclick="if(confirm('Restart quiz?')) location.reload()">
+                        🔄 Restart
+                    </button>
+                </div>
             </div>
 
             <!-- Results Container -->
