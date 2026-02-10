@@ -15,59 +15,75 @@
         </header>
 
         <main>
-            <!-- Score and Level Display -->
-            <div class="stats-bar">
-                <div class="stat">
-                    <span class="stat-label">Level:</span>
-                    <span id="level" class="stat-value">1</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-label">Score:</span>
-                    <span id="score" class="stat-value">0</span>
-                </div>
-            </div>
-
-            <!-- Equation Display -->
-            <div class="equation-area">
-                <div class="equation-display">
-                    <span id="num1" class="number">10</span>
-                    <span class="operator">×</span>
-                    <span id="num2" class="number">10</span>
-                    <span class="operator">=</span>
-                    <span id="result" class="number result">?</span>
-                </div>
-            </div>
-
-            <!-- Block Animation Area -->
-            <div id="blocks-container" class="blocks-container">
-                <!-- Animated blocks will appear here -->
-            </div>
-
-            <!-- Answer Buttons -->
-            <div class="answer-buttons" id="answer-buttons">
-                <!-- Answer buttons will be generated here -->
-            </div>
-
-            <!-- Feedback Message -->
-            <div id="feedback" class="feedback"></div>
-
-            <!-- Controls -->
-            <div class="controls">
-                <button id="show-answer-btn" class="control-btn show-btn">
-                    👀 Show Answer
-                </button>
-                <button id="next-btn" class="control-btn next-btn" style="display: none;">
-                    ➡️ Next Problem
-                </button>
-                <button id="restart-btn" class="control-btn restart-btn">
-                    🔄 Restart
-                </button>
-            </div>
-
-            <!-- Visual Explanation Toggle -->
-            <button id="toggle-visual" class="toggle-visual-btn">
-                ✨ See the Magic!
+            <!-- Start Quiz Button -->
+            <button id="start-quiz-btn" class="start-quiz-btn">
+                🎮 Start Quiz!
             </button>
+
+            <!-- Quiz Container -->
+            <div id="quiz-container" style="display: none;">
+                <!-- Score and Question Display -->
+                <div class="stats-bar">
+                    <div class="stat">
+                        <span id="question-number" class="stat-label">Question 1 of 10</span>
+                    </div>
+                    <div class="stat">
+                        <span id="score" class="stat-value">0 ⭐</span>
+                    </div>
+                </div>
+
+                <!-- Equation Display -->
+                <div class="equation-area">
+                    <div class="equation-display">
+                        <span id="num1" class="number">10</span>
+                        <span class="operator">×</span>
+                        <span id="num2" class="number">10</span>
+                        <span class="operator">=</span>
+                        <span id="result" class="number result">?</span>
+                    </div>
+                </div>
+
+                <!-- Block Animation Area -->
+                <div id="blocks-container" class="blocks-container">
+                    <!-- Animated blocks will appear here -->
+                </div>
+
+                <!-- Answer Buttons -->
+                <div class="answer-buttons" id="answer-buttons">
+                    <!-- Answer buttons will be generated here -->
+                </div>
+
+                <!-- Feedback Message -->
+                <div id="feedback" class="feedback"></div>
+
+                <!-- Controls -->
+                <div class="controls">
+                    <button id="show-answer-btn" class="control-btn show-btn">
+                        👀 Show Answer
+                    </button>
+                    <button id="next-btn" class="control-btn next-btn" style="display: none;">
+                        ➡️ Next Question
+                    </button>
+                </div>
+
+                <!-- Visual Explanation Toggle -->
+                <button id="toggle-visual" class="toggle-visual-btn">
+                    ✨ See the Magic!
+                </button>
+            </div>
+
+            <!-- Results Container -->
+            <div id="results-container" style="display: none;">
+                <div class="results-screen">
+                    <div class="results-emoji" id="results-emoji">🏆</div>
+                    <h2 class="results-message" id="results-message">AMAZING!</h2>
+                    <div class="results-stars" id="results-stars">100 out of 100 Stars!</div>
+                    <div class="results-percentage" id="results-percentage">100% Correct</div>
+                    <button id="play-again-btn" class="start-quiz-btn" onclick="location.reload()">
+                        🎮 Play Again!
+                    </button>
+                </div>
+            </div>
         </main>
 
         <footer>

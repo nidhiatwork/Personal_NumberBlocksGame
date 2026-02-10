@@ -1,6 +1,8 @@
 // Game State
-let currentLevel = 1;
-let currentScore = 0;
+let quizActive = false;
+let currentQuestion = 0;
+let totalQuestions = 10;
+let starsEarned = 0;
 let currentProblem = {};
 let showingVisual = false;
 
@@ -11,58 +13,85 @@ const colors = [
     '#48dbfb', '#1dd1a1', '#feca57', '#ee5a6f'
 ];
 
-// Level configurations
-const levels = [
-    { num1: 10, num2: 10, name: "Ten Times Ten" },
-    { num1: 10, num2: 100, name: "Ten Times Hundred" },
-    { num1: 100, num2: 10, name: "Hundred Times Ten" },
-    { num1: 10, num2: 1000, name: "Ten Times Thousand" },
-    { num1: 100, num2: 100, name: "Hundred Times Hundred" },
-    { num1: 1000, num2: 10, name: "Thousand Times Ten" },
-    { num1: 100, num2: 1000, name: "Hundred Times Thousand" },
-    { num1: 1000, num2: 100, name: "Thousand Times Hundred" },
-    { num1: 1000, num2: 1000, name: "Thousand Times Thousand" },
-    { num1: 10000, num2: 10, name: "Ten Thousand Times Ten" },
-    { num1: 10000, num2: 100, name: "Big Numbers!" }
+// Difficulty levels - from simple to hard
+const difficultyLevels = [
+    // Easy (1-3)
+    { max1: 5, max2: 5, difficulty: 'Easy' },
+    { max1: 10, max2: 5, difficulty: 'Easy' },
+    { max1: 10, max2: 10, difficulty: 'Easy' },
+
+    // Medium (4-6)
+    { max1: 10, max2: 20, difficulty: 'Medium' },
+    { max1: 20, max2: 20, difficulty: 'Medium' },
+    { max1: 50, max2: 10, difficulty: 'Medium' },
+
+    // Hard (7-10)
+    { max1: 100, max2: 10, difficulty: 'Hard' },
+    { max1: 50, max2: 50, difficulty: 'Hard' },
+    { max1: 100, max2: 100, difficulty: 'Hard' },
+    { max1: 1000, max2: 10, difficulty: 'Very Hard' }
 ];
 
 // DOM Elements
 const num1El = document.getElementById('num1');
 const num2El = document.getElementById('num2');
 const resultEl = document.getElementById('result');
-const levelEl = document.getElementById('level');
+const questionEl = document.getElementById('question-number');
 const scoreEl = document.getElementById('score');
 const answerButtonsEl = document.getElementById('answer-buttons');
 const feedbackEl = document.getElementById('feedback');
 const blocksContainer = document.getElementById('blocks-container');
 const showAnswerBtn = document.getElementById('show-answer-btn');
 const nextBtn = document.getElementById('next-btn');
-const restartBtn = document.getElementById('restart-btn');
+const startQuizBtn = document.getElementById('start-quiz-btn');
 const toggleVisualBtn = document.getElementById('toggle-visual');
 const celebrationEl = document.getElementById('celebration');
+const quizContainer = document.getElementById('quiz-container');
+const resultsContainer = document.getElementById('results-container');
 
 // Initialize game
 function init() {
-    loadProgress();
-    generateProblem();
-    updateDisplay();
     attachEventListeners();
-    playSound('start');
+    showStartScreen();
 }
 
 // Attach event listeners
 function attachEventListeners() {
     showAnswerBtn.addEventListener('click', showAnswer);
-    nextBtn.addEventListener('click', nextProblem);
-    restartBtn.addEventListener('click', restartGame);
+    nextBtn.addEventListener('click', nextQuestion);
+    startQuizBtn.addEventListener('click', startQuiz);
     toggleVisualBtn.addEventListener('click', toggleVisual);
 }
 
-// Generate a new problem
+// Show start screen
+function showStartScreen() {
+    quizContainer.style.display = 'none';
+    resultsContainer.style.display = 'none';
+    startQuizBtn.style.display = 'block';
+}
+
+// Start quiz
+function startQuiz() {
+    quizActive = true;
+    currentQuestion = 0;
+    starsEarned = 0;
+    startQuizBtn.style.display = 'none';
+    quizContainer.style.display = 'block';
+    resultsContainer.style.display = 'none';
+    generateProblem();
+    updateDisplay();
+    playSound('start');
+}
+
+// Generate a new problem with diverse difficulty
 function generateProblem() {
-    const levelConfig = levels[Math.min(currentLevel - 1, levels.length - 1)];
-    const num1 = levelConfig.num1;
-    const num2 = levelConfig.num2;
+    // Select difficulty based on question number
+    const difficultyIndex = Math.min(currentQuestion, difficultyLevels.length - 1);
+    const difficulty = difficultyLevels[difficultyIndex];
+
+    // Generate random numbers within difficulty range
+    const num1 = Math.floor(Math.random() * difficulty.max1) + 1;
+    const num2 = Math.floor(Math.random() * difficulty.max2) + 1;
     const correctAnswer = num1 * num2;
 
     // Generate wrong answers
@@ -74,7 +103,8 @@ function generateProblem() {
         num2,
         correctAnswer,
         answers,
-        answered: false
+        answered: false,
+        difficulty: difficulty.difficulty
     };
 
     renderProblem();
@@ -140,9 +170,9 @@ function checkAnswer(selectedAnswer, btnElement) {
     // Update UI
     if (isCorrect) {
         btnElement.classList.add('correct');
-        feedbackEl.textContent = '🎉 Amazing! You got it! 🎉';
+        starsEarned += 10;
+        feedbackEl.textContent = '🎉 Amazing! +10 Stars! 🌟';
         feedbackEl.className = 'feedback correct';
-        currentScore += 10;
         celebrate();
         playSound('correct');
 
@@ -160,7 +190,7 @@ function checkAnswer(selectedAnswer, btnElement) {
     }
 
     // Update score display
-    scoreEl.textContent = currentScore;
+    scoreEl.textContent = `${starsEarned} ⭐`;
 
     // Disable all buttons
     const allButtons = answerButtonsEl.querySelectorAll('.answer-btn');
@@ -169,9 +199,6 @@ function checkAnswer(selectedAnswer, btnElement) {
     // Show next button
     showAnswerBtn.style.display = 'none';
     nextBtn.style.display = 'block';
-
-    // Save progress
-    saveProgress();
 }
 
 // Show answer
@@ -305,43 +332,60 @@ function countZeros(num) {
     return (num.toString().match(/0/g) || []).length;
 }
 
-// Next problem
-function nextProblem() {
-    // Level up every 3 correct answers
-    if (currentScore > 0 && currentScore % 30 === 0 && currentLevel < levels.length) {
-        currentLevel++;
-        levelEl.textContent = currentLevel;
-        feedbackEl.textContent = '🎊 Level Up! 🎊';
-        feedbackEl.className = 'feedback correct';
-        celebrate();
-        playSound('levelup');
+// Next question in quiz
+function nextQuestion() {
+    currentQuestion++;
 
-        setTimeout(() => {
-            generateProblem();
-            updateDisplay();
-        }, 2000);
+    if (currentQuestion >= totalQuestions) {
+        // Quiz complete - show results
+        showResults();
     } else {
+        // Next question
         generateProblem();
         updateDisplay();
     }
 }
 
-// Restart game
-function restartGame() {
-    if (confirm('Are you sure you want to restart? Your progress will be reset.')) {
-        currentLevel = 1;
-        currentScore = 0;
-        generateProblem();
-        updateDisplay();
-        saveProgress();
+// Show results screen
+function showResults() {
+    quizActive = false;
+    quizContainer.style.display = 'none';
+    resultsContainer.style.display = 'block';
+
+    const percentage = (starsEarned / (totalQuestions * 10)) * 100;
+    let message = '';
+    let emoji = '';
+
+    if (percentage === 100) {
+        message = 'PERFECT SCORE!';
+        emoji = '🏆';
+        playSound('levelup');
+    } else if (percentage >= 80) {
+        message = 'AMAZING JOB!';
+        emoji = '🌟';
+        playSound('correct');
+    } else if (percentage >= 60) {
+        message = 'GREAT WORK!';
+        emoji = '👏';
+        playSound('correct');
+    } else {
+        message = 'KEEP PRACTICING!';
+        emoji = '💪';
         playSound('start');
     }
+
+    document.getElementById('results-emoji').textContent = emoji;
+    document.getElementById('results-message').textContent = message;
+    document.getElementById('results-stars').textContent = `${starsEarned} out of ${totalQuestions * 10} Stars!`;
+    document.getElementById('results-percentage').textContent = `${percentage.toFixed(0)}% Correct`;
+
+    celebrate();
 }
 
 // Update display
 function updateDisplay() {
-    levelEl.textContent = currentLevel;
-    scoreEl.textContent = currentScore;
+    questionEl.textContent = `Question ${currentQuestion + 1} of ${totalQuestions}`;
+    scoreEl.textContent = `${starsEarned} ⭐`;
 }
 
 // Celebration animation
@@ -398,25 +442,6 @@ function playSound(type) {
     oscillator.stop(audioContext.currentTime + 0.5);
 }
 
-// Save progress to localStorage
-function saveProgress() {
-    const progress = {
-        level: currentLevel,
-        score: currentScore,
-        timestamp: new Date().toISOString()
-    };
-    localStorage.setItem('myra-number-blocks-progress', JSON.stringify(progress));
-}
-
-// Load progress from localStorage
-function loadProgress() {
-    const saved = localStorage.getItem('myra-number-blocks-progress');
-    if (saved) {
-        const progress = JSON.parse(saved);
-        currentLevel = progress.level || 1;
-        currentScore = progress.score || 0;
-    }
-}
 
 // Initialize the game when page loads
 document.addEventListener('DOMContentLoaded', init);
