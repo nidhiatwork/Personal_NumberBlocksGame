@@ -397,6 +397,43 @@ footer {
     }
 }
 
+/* Navigation Buttons */
+.nav-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: flex-end;
+}
+
+.nav-btn {
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.nav-btn:active {
+    transform: translateY(0);
+}
+
+.home-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.restart-btn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
 /* Start Quiz Button */
 .start-quiz-btn {
     display: block;
