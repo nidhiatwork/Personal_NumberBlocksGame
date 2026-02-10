@@ -5,6 +5,7 @@ let totalQuestions = 10;
 let starsEarned = 0;
 let currentProblem = {};
 let showingVisual = false;
+let questionHistory = []; // Store all questions for navigation
 
 // Color palette for blocks
 const colors = [
@@ -43,6 +44,8 @@ const feedbackEl = document.getElementById('feedback');
 const blocksContainer = document.getElementById('blocks-container');
 const showAnswerBtn = document.getElementById('show-answer-btn');
 const nextBtn = document.getElementById('next-btn');
+const prevNavBtn = document.getElementById('prev-btn');
+const nextNavBtn = document.getElementById('next-nav-btn');
 const startQuizBtn = document.getElementById('start-quiz-btn');
 const celebrationEl = document.getElementById('celebration');
 const quizContainer = document.getElementById('quiz-container');
@@ -58,6 +61,8 @@ function init() {
 function attachEventListeners() {
     showAnswerBtn.addEventListener('click', showAnswer);
     nextBtn.addEventListener('click', nextQuestion);
+    prevNavBtn.addEventListener('click', previousQuestion);
+    nextNavBtn.addEventListener('click', navigateNext);
     startQuizBtn.addEventListener('click', startQuiz);
 }
 
@@ -73,16 +78,25 @@ function startQuiz() {
     quizActive = true;
     currentQuestion = 0;
     starsEarned = 0;
+    questionHistory = [];
     startQuizBtn.style.display = 'none';
     quizContainer.style.display = 'block';
     resultsContainer.style.display = 'none';
     generateProblem();
     updateDisplay();
+    updateNavigationButtons();
     playSound('start');
 }
 
 // Generate a new problem with diverse difficulty
 function generateProblem() {
+    // Check if we already have this question in history
+    if (questionHistory[currentQuestion]) {
+        currentProblem = questionHistory[currentQuestion];
+        renderProblem();
+        return;
+    }
+
     // Select difficulty based on question number
     const difficultyIndex = Math.min(currentQuestion, difficultyLevels.length - 1);
     const difficulty = difficultyLevels[difficultyIndex];
@@ -102,8 +116,12 @@ function generateProblem() {
         correctAnswer,
         answers,
         answered: false,
-        difficulty: difficulty.difficulty
+        difficulty: difficulty.difficulty,
+        userAnswer: null
     };
+
+    // Save to history
+    questionHistory[currentQuestion] = currentProblem;
 
     renderProblem();
 }
@@ -329,6 +347,48 @@ function nextQuestion() {
         // Next question
         generateProblem();
         updateDisplay();
+        updateNavigationButtons();
+    }
+}
+
+// Navigate to previous question
+function previousQuestion() {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        generateProblem();
+        updateDisplay();
+        updateNavigationButtons();
+    }
+}
+
+// Navigate to next question (from nav button)
+function navigateNext() {
+    if (currentQuestion < totalQuestions - 1 && questionHistory[currentQuestion + 1]) {
+        currentQuestion++;
+        generateProblem();
+        updateDisplay();
+        updateNavigationButtons();
+    }
+}
+
+// Update navigation button states
+function updateNavigationButtons() {
+    // Previous button - disabled on first question
+    if (currentQuestion === 0) {
+        prevNavBtn.disabled = true;
+        prevNavBtn.style.opacity = '0.5';
+    } else {
+        prevNavBtn.disabled = false;
+        prevNavBtn.style.opacity = '1';
+    }
+
+    // Next button - disabled if next question doesn't exist yet
+    if (currentQuestion >= totalQuestions - 1 || !questionHistory[currentQuestion + 1]) {
+        nextNavBtn.disabled = true;
+        nextNavBtn.style.opacity = '0.5';
+    } else {
+        nextNavBtn.disabled = false;
+        nextNavBtn.style.opacity = '1';
     }
 }
 
