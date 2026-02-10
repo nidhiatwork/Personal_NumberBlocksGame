@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A colorful animated number blocks app for Myra to learn big number multiplication">
+    <title>Myra's Number Blocks</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔢 Myra's Number Blocks 🔢</h1>
+            <p class="subtitle">Learn Big Numbers!</p>
+        </header>
+
+        <main>
+            <!-- Score and Level Display -->
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-label">Level:</span>
+                    <span id="level" class="stat-value">1</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Score:</span>
+                    <span id="score" class="stat-value">0</span>
+                </div>
+            </div>
+
+            <!-- Equation Display -->
+            <div class="equation-area">
+                <div class="equation-display">
+                    <span id="num1" class="number">10</span>
+                    <span class="operator">×</span>
+                    <span id="num2" class="number">10</span>
+                    <span class="operator">=</span>
+                    <span id="result" class="number result">?</span>
+                </div>
+            </div>
+
+            <!-- Block Animation Area -->
+            <div id="blocks-container" class="blocks-container">
+                <!-- Animated blocks will appear here -->
+            </div>
+
+            <!-- Answer Buttons -->
+            <div class="answer-buttons" id="answer-buttons">
+                <!-- Answer buttons will be generated here -->
+            </div>
+
+            <!-- Feedback Message -->
+            <div id="feedback" class="feedback"></div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <button id="show-answer-btn" class="control-btn show-btn">
+                    👀 Show Answer
+                </button>
+                <button id="next-btn" class="control-btn next-btn" style="display: none;">
+                    ➡️ Next Problem
+                </button>
+                <button id="restart-btn" class="control-btn restart-btn">
+                    🔄 Restart
+                </button>
+            </div>
+
+            <!-- Visual Explanation Toggle -->
+            <button id="toggle-visual" class="toggle-visual-btn">
+                ✨ See the Magic!
+            </button>
+        </main>
+
+        <footer>
+            <p>Made with 💖 for Myra</p>
+        </footer>
+    </div>
+
+    <!-- Celebration Animation -->
+    <div id="celebration" class="celebration"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
