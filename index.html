@@ -3,22 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A colorful animated number blocks app for Myra to learn big number multiplication">
-    <title>Myra's Number Blocks</title>
+    <meta name="description" content="A colorful animated math quiz app for Myra to learn multiplication, addition, subtraction and division">
+    <title>Myra's Math Quest</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🔢 Myra's Number Blocks 🔢</h1>
-            <p class="subtitle">Learn Big Numbers!</p>
+            <h1>🔢 Myra's Math Quest 🔢</h1>
+            <p class="subtitle">Learn Math the Fun Way!</p>
         </header>
 
         <main>
-            <!-- Start Quiz Button -->
-            <button id="start-quiz-btn" class="start-quiz-btn">
-                🎮 Start Quiz!
-            </button>
+            <!-- Quiz Type Selection -->
+            <div id="quiz-menu" class="quiz-menu">
+                <p class="menu-title">Choose a Quiz! 🎯</p>
+                <button class="quiz-type-btn multiply-btn" data-type="multiplication">
+                    ✖️ Multiply by Tens
+                </button>
+                <button class="quiz-type-btn add-btn" data-type="addition">
+                    ➕ Addition
+                </button>
+                <button class="quiz-type-btn subtract-btn" data-type="subtraction">
+                    ➖ Subtraction
+                </button>
+                <button class="quiz-type-btn divide-btn" data-type="division">
+                    ➗ Division
+                </button>
+            </div>
 
             <!-- Quiz Container -->
             <div id="quiz-container" style="display: none;">
@@ -36,7 +48,7 @@
                 <div class="equation-area">
                     <div class="equation-display">
                         <span id="num1" class="number">10</span>
-                        <span class="operator">×</span>
+                        <span id="operator" class="operator">×</span>
                         <span id="num2" class="number">10</span>
                         <span class="operator">=</span>
                         <span id="result" class="number result">?</span>

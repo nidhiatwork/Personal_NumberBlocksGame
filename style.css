@@ -475,6 +475,64 @@ footer {
     transform: translateY(0);
 }
 
+/* Quiz Menu */
+.quiz-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px 0;
+    align-items: center;
+}
+
+.menu-title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #5f27cd;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.quiz-type-btn {
+    display: block;
+    width: 100%;
+    max-width: 90%;
+    padding: 22px;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.quiz-type-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.quiz-type-btn:active {
+    transform: translateY(0);
+}
+
+.multiply-btn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.add-btn {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.subtract-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.divide-btn {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
 /* Results Screen */
 .results-screen {
     text-align: center;
