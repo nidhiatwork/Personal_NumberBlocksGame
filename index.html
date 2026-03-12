@@ -18,14 +18,17 @@
             <!-- Quiz Type Selection -->
             <div id="quiz-menu" class="quiz-menu">
                 <p class="menu-title">Choose a Quiz! 🎯</p>
-                <button class="quiz-type-btn multiply-btn" data-type="multiplication">
-                    ✖️ Multiplication
+                <button class="quiz-type-btn counting-btn" data-type="counting">
+                    🔢 Counting
                 </button>
                 <button class="quiz-type-btn add-btn" data-type="addition">
                     ➕ Addition
                 </button>
                 <button class="quiz-type-btn subtract-btn" data-type="subtraction">
                     ➖ Subtraction
+                </button>
+                <button class="quiz-type-btn multiply-btn" data-type="multiplication">
+                    ✖️ Multiplication
                 </button>
                 <button class="quiz-type-btn divide-btn" data-type="division">
                     ➗ Division
@@ -44,8 +47,8 @@
                     </div>
                 </div>
 
-                <!-- Equation Display -->
-                <div class="equation-area">
+                <!-- Equation Display (hidden for counting) -->
+                <div class="equation-area" id="equation-area">
                     <div class="equation-display">
                         <span id="num1" class="number">10</span>
                         <span id="operator" class="operator">×</span>
@@ -53,6 +56,12 @@
                         <span class="operator">=</span>
                         <span id="result" class="number result">?</span>
                     </div>
+                </div>
+
+                <!-- Counting Area (shown only for counting quiz) -->
+                <div class="counting-area" id="counting-area" style="display: none;">
+                    <div class="counting-label" id="counting-label">How many 🍎?</div>
+                    <div class="counting-objects" id="counting-objects"></div>
                 </div>
 
                 <!-- Block Animation Area -->

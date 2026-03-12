@@ -5,7 +5,7 @@ let totalQuestions = 10;
 let correctCount = 0;
 let currentProblem = {};
 let showingVisual = false;
-let quizType = 'multiplication'; // multiplication, addition, subtraction, division
+let quizType = 'counting'; // counting, multiplication, addition, subtraction, division
 
 // Color palette for blocks
 const colors = [
@@ -14,12 +14,16 @@ const colors = [
     '#48dbfb', '#1dd1a1', '#feca57', '#ee5a6f'
 ];
 
+// Counting emojis
+const countingEmojis = ['🍎', '🌟', '🐶', '🦋', '🌺', '🐱', '🎈', '🐟', '🍕', '🚗', '🌈', '🐘'];
+
 // Operator symbols per quiz type
 const operatorSymbols = {
     multiplication: '×',
     addition: '+',
     subtraction: '−',
-    division: '÷'
+    division: '÷',
+    counting: '#'
 };
 
 // Multiplication: simple tables for Grade 1 (1–5 × 1–5)
@@ -94,6 +98,10 @@ const quizMenu = document.getElementById('quiz-menu');
 const celebrationEl = document.getElementById('celebration');
 const quizContainer = document.getElementById('quiz-container');
 const resultsContainer = document.getElementById('results-container');
+const equationArea = document.getElementById('equation-area');
+const countingArea = document.getElementById('counting-area');
+const countingLabel = document.getElementById('counting-label');
+const countingObjects = document.getElementById('counting-objects');
 
 // Initialize game
 function init() {
@@ -130,7 +138,16 @@ function startQuiz() {
     quizMenu.style.display = 'none';
     quizContainer.style.display = 'block';
     resultsContainer.style.display = 'none';
-    operatorEl.textContent = operatorSymbols[quizType];
+
+    if (quizType === 'counting') {
+        equationArea.style.display = 'none';
+        countingArea.style.display = 'block';
+    } else {
+        equationArea.style.display = 'block';
+        countingArea.style.display = 'none';
+        operatorEl.textContent = operatorSymbols[quizType];
+    }
+
     generateProblem();
     updateDisplay();
     playSound('start');
@@ -142,6 +159,14 @@ function generateProblem() {
     let num1, num2, correctAnswer;
 
     switch (quizType) {
+        case 'counting':
+            const maxCount = Math.min(3 + levelIndex, 15);
+            const minCount = Math.max(1, levelIndex);
+            correctAnswer = Math.floor(Math.random() * (maxCount - minCount + 1)) + minCount;
+            num1 = correctAnswer;
+            num2 = 0;
+            break;
+
         case 'multiplication':
             const mLevel = multiplyLevels[levelIndex];
             num1 = mLevel.nums[Math.floor(Math.random() * mLevel.nums.length)];
@@ -195,9 +220,15 @@ function generateWrongAnswers(correct, num1, num2) {
     const wrong = new Set();
 
     switch (quizType) {
-        case 'multiplication':
+        case 'counting':
             wrong.add(correct + 1);
             if (correct - 1 > 0) wrong.add(correct - 1);
+            wrong.add(correct + 2);
+            if (correct - 2 > 0) wrong.add(correct - 2);
+            if (correct + 3 <= 15) wrong.add(correct + 3);
+            break;
+
+        case 'multiplication':
             wrong.add(correct + 2);
             if (correct - 2 > 0) wrong.add(correct - 2);
             wrong.add(num1 + num2);
@@ -248,16 +279,30 @@ function generateWrongAnswers(correct, num1, num2) {
 
 // Render problem to UI
 function renderProblem() {
-    num1El.textContent = currentProblem.num1.toLocaleString();
-    num2El.textContent = currentProblem.num2.toLocaleString();
-    resultEl.textContent = '?';
-
     // Clear previous state
     answerButtonsEl.innerHTML = '';
     feedbackEl.textContent = '';
     feedbackEl.className = 'feedback';
     blocksContainer.innerHTML = '';
     showingVisual = false;
+
+    if (quizType === 'counting') {
+        // Show counting objects
+        const emoji = countingEmojis[Math.floor(Math.random() * countingEmojis.length)];
+        countingLabel.textContent = `How many ${emoji}?`;
+        countingObjects.innerHTML = '';
+        for (let i = 0; i < currentProblem.num1; i++) {
+            const obj = document.createElement('span');
+            obj.className = 'count-obj';
+            obj.textContent = emoji;
+            obj.style.animationDelay = `${i * 0.08}s`;
+            countingObjects.appendChild(obj);
+        }
+    } else {
+        num1El.textContent = currentProblem.num1.toLocaleString();
+        num2El.textContent = currentProblem.num2.toLocaleString();
+        resultEl.textContent = '?';
+    }
 
     // Create answer buttons
     currentProblem.answers.forEach(answer => {
@@ -332,6 +377,9 @@ function showVisual() {
     const answer = currentProblem.correctAnswer;
 
     switch (quizType) {
+        case 'counting':
+            // No block visual for counting — objects are already shown
+            break;
         case 'multiplication':
             if (answer > 10000) {
                 showSimplifiedVisual(num1, num2);
