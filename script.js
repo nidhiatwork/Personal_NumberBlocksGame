@@ -2,7 +2,7 @@
 let quizActive = false;
 let currentQuestion = 0;
 let totalQuestions = 10;
-let starsEarned = 0;
+let correctCount = 0;
 let currentProblem = {};
 let showingVisual = false;
 let quizType = 'multiplication'; // multiplication, addition, subtraction, division
@@ -22,60 +22,60 @@ const operatorSymbols = {
     division: '÷'
 };
 
-// Multiplication: orders of tens only
+// Multiplication: simple tables for Grade 1 (1–5 × 1–5)
 const multiplyLevels = [
-    { nums: [2,3,4,5], tens: [10] },
-    { nums: [2,3,4,5,6], tens: [10] },
-    { nums: [6,7,8,9], tens: [10] },
-    { nums: [2,3,4,5], tens: [100] },
-    { nums: [6,7,8,9], tens: [100] },
-    { nums: [10,20,30], tens: [10] },
-    { nums: [2,3,4,5], tens: [1000] },
-    { nums: [10,20,30,40,50], tens: [100] },
-    { nums: [6,7,8,9], tens: [1000] },
-    { nums: [10,20,50,100], tens: [1000] }
+    { nums: [1,2], tens: [1,2] },
+    { nums: [1,2,3], tens: [1,2] },
+    { nums: [2,3], tens: [2,3] },
+    { nums: [2,3,4], tens: [2,3] },
+    { nums: [2,3,4], tens: [3,4] },
+    { nums: [3,4,5], tens: [2,3] },
+    { nums: [3,4,5], tens: [3,4] },
+    { nums: [4,5], tens: [3,4,5] },
+    { nums: [3,4,5], tens: [4,5] },
+    { nums: [4,5], tens: [4,5] }
 ];
 
-// Addition: 6-year-old friendly (single digits up to small double digits)
+// Addition: Grade 1 friendly (single digits, sums ≤ 15)
 const additionLevels = [
-    { max1: 5, max2: 5 },
+    { max1: 5, max2: 3 },
+    { max1: 5, max2: 4 },
+    { max1: 6, max2: 4 },
+    { max1: 7, max2: 5 },
     { max1: 8, max2: 5 },
-    { max1: 9, max2: 9 },
-    { max1: 10, max2: 5 },
-    { max1: 10, max2: 10 },
-    { max1: 12, max2: 8 },
-    { max1: 15, max2: 5 },
-    { max1: 15, max2: 10 },
-    { max1: 20, max2: 10 },
-    { max1: 20, max2: 20 }
+    { max1: 9, max2: 5 },
+    { max1: 9, max2: 6 },
+    { max1: 9, max2: 6 },
+    { max1: 9, max2: 6 },
+    { max1: 9, max2: 6 }
 ];
 
-// Subtraction: 6-year-old friendly (result always >= 0)
+// Subtraction: Grade 1 friendly (small numbers, result always ≥ 0)
 const subtractionLevels = [
     { max1: 5, maxSub: 3 },
+    { max1: 6, maxSub: 4 },
+    { max1: 7, maxSub: 5 },
     { max1: 8, maxSub: 5 },
-    { max1: 10, maxSub: 5 },
+    { max1: 9, maxSub: 5 },
+    { max1: 9, maxSub: 6 },
+    { max1: 10, maxSub: 6 },
+    { max1: 10, maxSub: 7 },
     { max1: 10, maxSub: 8 },
-    { max1: 12, maxSub: 8 },
-    { max1: 15, maxSub: 10 },
-    { max1: 15, maxSub: 12 },
-    { max1: 18, maxSub: 10 },
-    { max1: 20, maxSub: 15 },
-    { max1: 20, maxSub: 18 }
+    { max1: 10, maxSub: 9 }
 ];
 
-// Division: 6-year-old friendly (clean division, no remainders)
+// Division: Grade 1 friendly (clean division, small numbers, no remainders)
 const divisionPairs = [
-    { pairs: [[2,1],[4,2],[6,2],[6,3]] },
-    { pairs: [[8,2],[8,4],[9,3],[10,2]] },
-    { pairs: [[10,5],[12,2],[12,3],[12,4]] },
-    { pairs: [[14,2],[14,7],[15,3],[15,5]] },
-    { pairs: [[16,2],[16,4],[16,8],[18,2]] },
-    { pairs: [[18,3],[18,6],[18,9],[20,2]] },
-    { pairs: [[20,4],[20,5],[20,10],[24,3]] },
-    { pairs: [[24,4],[24,6],[24,8],[25,5]] },
-    { pairs: [[30,5],[30,6],[30,10],[36,6]] },
-    { pairs: [[40,5],[40,8],[40,10],[50,10]] }
+    { pairs: [[2,1],[2,2],[4,2]] },
+    { pairs: [[4,2],[6,2],[6,3]] },
+    { pairs: [[8,2],[8,4],[6,3]] },
+    { pairs: [[9,3],[10,2],[10,5]] },
+    { pairs: [[4,2],[6,3],[8,4]] },
+    { pairs: [[10,5],[10,2],[12,3]] },
+    { pairs: [[12,4],[12,6],[15,5]] },
+    { pairs: [[15,3],[16,4],[16,8]] },
+    { pairs: [[18,3],[18,6],[20,5]] },
+    { pairs: [[20,4],[20,10],[25,5]] }
 ];
 
 // DOM Elements
@@ -126,7 +126,7 @@ function showStartScreen() {
 function startQuiz() {
     quizActive = true;
     currentQuestion = 0;
-    starsEarned = 0;
+    correctCount = 0;
     quizMenu.style.display = 'none';
     quizContainer.style.display = 'block';
     resultsContainer.style.display = 'none';
@@ -196,11 +196,11 @@ function generateWrongAnswers(correct, num1, num2) {
 
     switch (quizType) {
         case 'multiplication':
-            wrong.add(correct * 10);
-            if (correct / 10 >= 1) wrong.add(correct / 10);
+            wrong.add(correct + 1);
+            if (correct - 1 > 0) wrong.add(correct - 1);
+            wrong.add(correct + 2);
+            if (correct - 2 > 0) wrong.add(correct - 2);
             wrong.add(num1 + num2);
-            wrong.add(correct + num1);
-            if (correct - num1 > 0) wrong.add(correct - num1);
             break;
 
         case 'addition':
@@ -283,8 +283,8 @@ function checkAnswer(selectedAnswer, btnElement) {
     // Update UI
     if (isCorrect) {
         btnElement.classList.add('correct');
-        starsEarned += 10;
-        feedbackEl.textContent = '🎉 Amazing! +10 Stars! 🌟';
+        correctCount++;
+        feedbackEl.textContent = `🎉 Correct! ${correctCount} / ${totalQuestions} ⭐`;
         feedbackEl.className = 'feedback correct';
         celebrate();
         playSound('correct');
@@ -303,7 +303,7 @@ function checkAnswer(selectedAnswer, btnElement) {
     }
 
     // Update score display
-    scoreEl.textContent = `${starsEarned} ⭐`;
+    scoreEl.textContent = `✅ ${correctCount} / ${totalQuestions}`;
 
     // Disable all buttons
     const allButtons = answerButtonsEl.querySelectorAll('.answer-btn');
@@ -529,25 +529,33 @@ function nextQuestion() {
     }
 }
 
-// Show results screen
+// Show results screen with individual stars
 function showResults() {
     quizActive = false;
     quizContainer.style.display = 'none';
     resultsContainer.style.display = 'block';
 
-    const percentage = (starsEarned / (totalQuestions * 10)) * 100;
-    let message = '';
-    let emoji = '';
+    // Render individual stars
+    const starsGrid = document.getElementById('stars-grid');
+    starsGrid.innerHTML = '';
+    for (let i = 0; i < correctCount; i++) {
+        const star = document.createElement('span');
+        star.className = 'star-item';
+        star.textContent = '⭐';
+        star.style.animationDelay = `${i * 0.2}s`;
+        starsGrid.appendChild(star);
+    }
 
-    if (percentage === 100) {
+    let message, emoji;
+    if (correctCount === totalQuestions) {
         message = 'PERFECT SCORE!';
         emoji = '🏆';
         playSound('levelup');
-    } else if (percentage >= 80) {
+    } else if (correctCount >= 8) {
         message = 'AMAZING JOB!';
         emoji = '🌟';
         playSound('correct');
-    } else if (percentage >= 60) {
+    } else if (correctCount >= 6) {
         message = 'GREAT WORK!';
         emoji = '👏';
         playSound('correct');
@@ -559,8 +567,7 @@ function showResults() {
 
     document.getElementById('results-emoji').textContent = emoji;
     document.getElementById('results-message').textContent = message;
-    document.getElementById('results-stars').textContent = `${starsEarned} out of ${totalQuestions * 10} Stars!`;
-    document.getElementById('results-percentage').textContent = `${percentage.toFixed(0)}% Correct`;
+    document.getElementById('results-text').textContent = `Myra got ${correctCount} stars!`;
 
     celebrate();
 }
@@ -568,7 +575,7 @@ function showResults() {
 // Update display
 function updateDisplay() {
     questionEl.textContent = `Question ${currentQuestion + 1} of ${totalQuestions}`;
-    scoreEl.textContent = `${starsEarned} ⭐`;
+    scoreEl.textContent = `✅ ${correctCount} / ${totalQuestions}`;
 }
 
 // Celebration animation

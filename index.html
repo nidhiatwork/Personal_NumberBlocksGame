@@ -19,7 +19,7 @@
             <div id="quiz-menu" class="quiz-menu">
                 <p class="menu-title">Choose a Quiz! 🎯</p>
                 <button class="quiz-type-btn multiply-btn" data-type="multiplication">
-                    ✖️ Multiply by Tens
+                    ✖️ Multiplication
                 </button>
                 <button class="quiz-type-btn add-btn" data-type="addition">
                     ➕ Addition
@@ -40,7 +40,7 @@
                         <span id="question-number" class="stat-label">Question 1 of 10</span>
                     </div>
                     <div class="stat">
-                        <span id="score" class="stat-value">0 ⭐</span>
+                        <span id="score" class="stat-value">✅ 0 / 10</span>
                     </div>
                 </div>
 
@@ -98,8 +98,10 @@
                 <div class="results-screen">
                     <div class="results-emoji" id="results-emoji">🏆</div>
                     <h2 class="results-message" id="results-message">AMAZING!</h2>
-                    <div class="results-stars" id="results-stars">100 out of 100 Stars!</div>
-                    <div class="results-percentage" id="results-percentage">100% Correct</div>
+                    <div class="stars-grid" id="stars-grid">
+                        <!-- Individual star emojis rendered by JS -->
+                    </div>
+                    <div class="results-text" id="results-text">Myra got 10 stars!</div>
                     <button id="play-again-btn" class="start-quiz-btn" onclick="location.reload()">
                         🎮 Play Again!
                     </button>
