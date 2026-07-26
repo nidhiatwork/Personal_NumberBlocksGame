@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#6c5ce7" />
+  <meta name="description" content="A fun 14-day spelling adventure for Class 1 students." />
+  <title>Spelling Star — 14 Day Adventure</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- ============ TOP BAR ============ -->
+    <header class="topbar">
+      <button id="backBtn" class="icon-btn hidden" aria-label="Go back">←</button>
+      <h1 id="topTitle">⭐ Spelling Star</h1>
+      <div id="streakChip" class="chip" aria-label="Day streak">🔥 0</div>
+    </header>
+
+    <!-- ============ HOME: THE 14 DAY MAP ============ -->
+    <main id="screen-home" class="screen">
+      <section class="hero">
+        <p class="hero-text">Learn <strong>140 words</strong> in <strong>14 days</strong> and become a Spelling Expert!</p>
+        <div class="progress-wrap">
+          <div class="progressbar"><div id="overallBar" class="bar"></div></div>
+          <span id="overallText" class="progress-text">0 of 14 days done</span>
+        </div>
+      </section>
+
+      <div id="expertBadge" class="badge hidden">
+        <div class="badge-star">🏆</div>
+        <div>
+          <h2>Spelling Expert!</h2>
+          <p>You finished all 14 days. Amazing work!</p>
+        </div>
+      </div>
+
+      <h2 class="section-title">Your Adventure Map</h2>
+      <div id="homeGrid" class="home-grid"><!-- day cards injected by script.js --></div>
+
+      <footer class="footer">
+        <button id="resetBtn" class="link-btn">Start over (clear progress)</button>
+        <p class="tiny">Made for Class 1 · Works offline · No ads, no tracking</p>
+      </footer>
+    </main>
+
+    <!-- ============ DAY: LEARN + QUIZ ============ -->
+    <main id="screen-day" class="screen hidden">
+      <div class="progress-wrap thin">
+        <div class="progressbar"><div id="dayBar" class="bar"></div></div>
+        <span id="dayStepText" class="progress-text">Step 1</span>
+      </div>
+      <div id="stage" class="stage"><!-- activity injected by script.js --></div>
+    </main>
+
+    <!-- ============ RESULT ============ -->
+    <main id="screen-result" class="screen hidden">
+      <div class="result-card">
+        <div id="resultStars" class="stars big">☆☆☆</div>
+        <h2 id="resultTitle">Well done!</h2>
+        <p id="resultScore" class="result-score"></p>
+        <div id="resultMissed" class="missed"></div>
+        <button id="againBtn" class="btn btn-accent">🔁 Practice this day again</button>
+        <button id="mapBtn" class="btn btn-primary">🗺️ Back to the map</button>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
